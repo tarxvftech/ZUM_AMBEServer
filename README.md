@@ -1,14 +1,24 @@
-# ZUM Radio AMBE Server board firmware
+# ZUM Radio AMBE Server board open firmware
 
 ## What
 This is a fully-open firmware for the ZUM Radio AMBE Server board, which
-provides an ESP32 with USB serial, Ethernet, WiFi, and Bluetooth access
-to an AMBE3000 voice codec chip from DVSI.
+provides an ESP32 (with USB serial, Ethernet, WiFi, and Bluetooth connectivity) 
+access to an AMBE3000 voice codec chip from DVSI.
 
-The point of this hardware and software is to make the various AMBE codecs
-accessible to various programs that might need them, such as cross-mode
-software (e.g. to bridge DMR and D-STAR to each other or other modes),
-soft network clients for these modes, and that sort of thing.
+The point of this hardware and software is to make the various AMBE
+voice codecs accessible to various programs that might need them, such as
+cross-mode software (e.g. to bridge DMR and D-STAR to each other or other
+modes), soft network clients for these modes, and that sort of thing.
+
+AMBE itself is proprietary, patent-encumbered, and all kinds
+of other things.  It's also legacy, and there are now fully-open
+alternatives. Alas, AMBE is built into several protocols in wide use,
+hence the need for this hardware and software.
+
+## Who
+Expected audience is mostly amateur radio operators with some developer experience.
+Releases and firmware upgrade information for non-developers available [TODO: HERE]().
+For non-developer support, please see [the ZUM Radio support options](https://zumradio.com/support.html).
 
 ## Why
 The [original firmware](https://zumradio.com/downloads.html#precompiled)
