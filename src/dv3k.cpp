@@ -44,28 +44,28 @@ uint8_t dv3_calc_parity( uint8_t * pkt ){
     //if you run it on a packet with a zeroed parity field, it will return the parity value to store there
     
     dv3_hdr * hdr = (dv3_hdr *) pkt;
-    int parity_len = hdr.pktlength + 4; //pktlength ignores header (len=4) but we need whole packet for calculating parity
+    int len = hdr->pktlength + 4; //pktlength ignores header (len=4) but we need whole packet for calculating parity
     //parity is _all_ bytes of a packet except START_BYTE 0x61 and
     //PARITY_BYTE 0x2f. We're just going to iterate over all bytes and
     //undor the START_BYTE and PARITY_BYTE to keep it simple
     uint8_t acc = 0;
-    for( int i = 0; i < len+4; i++ ){
-        acc ^= pkt+i;
+    for( int i = 0; i < len; i++ ){
+        acc ^= pkt[i];
     }
     acc ^= 0x2f ^ 0x61;  //un-xor the magic bytes
     return acc;
 }
 void dv3_calc_hdr( uint8_t * pkt ){
     dv3_hdr * hdr = (dv3_hdr *) pkt;
-    hdr.magic = 0x61;
+    hdr->magic = 0x61;
 }
 void dv3_calc_ftr( uint8_t * pkt ){
     dv3_hdr * hdr = (dv3_hdr *) pkt;
-    int ftr_offset = hdr.pktlength+4-2; //4 for the header size, 2 for the footer size
+    int ftr_offset = hdr->pktlength+4-2; //4 for the header size, 2 for the footer size
     dv3_ftr * ftr = (dv3_ftr *) (pkt+ftr_offset);
-    ftr.magic = 0x2f;
-    ftr.parity = 0; //clean slate for setting parity
-    ftr.parity = dv3_calc_parity(pkt);
+    ftr->magic = 0x2f;
+    ftr->parity = 0; //clean slate for setting parity
+    ftr->parity = dv3_calc_parity(pkt);
 }
 void dv3_calc( uint8_t * pkt ){
     //pktlength gets set outside beforehand
