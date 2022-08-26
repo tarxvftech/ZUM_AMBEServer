@@ -20,3 +20,10 @@ jobs:
       # Build the PlatformIO project
       - name: Build PlatformIO project
         run: pio run
+      - name: save built image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.head_ref }}.${{ github.sha }}.bin
+          path: .pio/build/lolin32/firmware.bin
+          if-no-files-found: error
+          retention-days: 10
