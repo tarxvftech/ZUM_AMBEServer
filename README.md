@@ -64,3 +64,26 @@ TODO? (No Windows around, here, so please fill in! ~MM)
 ### Use this firmware's services / Client software
 TODO (Not there yet!)
 
+
+
+
+## Misc Notes:
+```
+// code built and tested with these library versions:
+// PLATFORM: Espressif 32 (3.0.0) > WEMOS LOLIN32
+// HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+//  - framework-arduinoespressif32 3.10004.210126 (1.0.4)
+//  - tool-esptoolpy 1.30000.201119 (3.0.0)
+//  - toolchain-xtensa32 2.50200.80 (5.2.0)
+// |-- <ESP8266_SSD1306> 4.1.0
+// |   |-- <Wire> 1.0.1
+// |   |-- <SPI> 1.0
+// |-- <WiFi> 1.0
+// |-- <Ethernet> 2.0.0
+// |   |-- <SPI> 1.0
+// |-- <FS> 1.0
+// |-- <SD(esp32)> 1.0.5
+// |   |-- <FS> 1.0
+// |   |-- <SPI> 1.0
+// |-- <SPI> 1.0
+```
