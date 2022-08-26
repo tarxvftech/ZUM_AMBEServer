@@ -47,6 +47,16 @@ Flash the board over USB serial with `pio run -t upload` (no button
 presses needed or anything) and watch the serial output with `pio device
 monitor`.
 
+Manual flashing: TODO (notes below from what PIO does, but not yet recommended):
+```
+esptool.py --chip esp32 --port "/dev/ttyUSB0" --baud 460800 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_freq 40m --flash_size 4MB 
+0x1000 /root/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/bin/bootloader_dio_40m.bin  \
+0x8000 /app/.pio/build/lolin32/partitions.bin  \
+0xe000 /root/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin  \
+0x10000 .pio/build/lolin32/firmware.bin \
+```
+
+
 
 ### Compile this firmware from Windows (GUI)
 TODO? (No Windows around, here, so please fill in! ~MM)
