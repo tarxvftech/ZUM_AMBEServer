@@ -33,6 +33,9 @@
 uint8_t mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 EthernetClient ethernet;
 
+const char* ssid     = "ham";
+const char* password = "AAAAAAAAAAAA";
+
 void setup() {
   pinMode(ETHERNET_SELECT, OUTPUT);
   digitalWrite(ETHERNET_SELECT, LOW); // Enable Ehernet card
@@ -62,7 +65,7 @@ void setup() {
     }
     file.close();
   }
-  //WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
 
 }
 
