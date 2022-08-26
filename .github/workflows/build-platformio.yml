@@ -9,17 +9,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checkout repository
       - name: Checkout code
         uses: actions/checkout@v2
       
-      # Setup PlatformIO in PATH
+      - name: cache platformio
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/platformio.ini') }}
+          path: |
+            ~/.platformio
+            .pio/libdeps
+
       - name: Setup PlatformIO
         uses: n-vr/setup-platformio-action@v1
       
-      # Build the PlatformIO project
       - name: Build PlatformIO project
         run: pio run
+
       - name: save built image
         uses: actions/upload-artifact@v3
         with:
