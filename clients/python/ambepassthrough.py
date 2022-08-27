@@ -5,6 +5,8 @@ import time
 import struct
 import serial
 
+#https://pyserial.readthedocs.io/en/latest/pyserial_api.html
+
 amberesetvector = b"\x61\x00\x01\x00\x33"
 
 DIR_IN = 1
