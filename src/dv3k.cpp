@@ -80,7 +80,7 @@ enum directions {
     DIR_IN = 1,
     DIR_OUT = 2
 };
-#define DIR_BOTH ((enum directions) (DIR_IN & DIR_OUT))
+#define DIR_BOTH ((enum directions) (DIR_IN | DIR_OUT))
 typedef struct _dv3_cmd {
     char name[20];
     enum dv3k_commands code;

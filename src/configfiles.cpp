@@ -22,15 +22,15 @@ int parse_kvpair(FsFile * file, kv * parsed){
   if( !r ){
     return -1;
   }
-  Serial.print("line=");
-  Serial.println(line);
+  //Serial.print("line=");
+  //Serial.println(line);
   strncpy(parsed->key, line, min(r,MAX_KV_LEN-1));
   r = readBytesUntil(file, "\n", line, MAX_KV_LEN-1);
   if( !r ){
     return -1;
   }
-  Serial.print("line=");
-  Serial.println(line);
+  //Serial.print("line=");
+  //Serial.println(line);
   if( line[0] == '"' ){
     for(int i=1;i<r;i++){
       if( line[i] == '"' ){
@@ -127,10 +127,10 @@ int string2macaddress( uint8_t * mac, char * s){
     if( c >= 'a' && c <= 'f' ){
       x = c - 'a' + 0xA; 
     }
-    Serial.print("i="); Serial.print(i,HEX);
-    Serial.print(", c="); Serial.print(c,HEX);
-    Serial.print(", x="); Serial.print(x,HEX);
-    Serial.println("");
+    //Serial.print("i="); Serial.print(i,HEX);
+    //Serial.print(", c="); Serial.print(c,HEX);
+    //Serial.print(", x="); Serial.print(x,HEX);
+    //Serial.println("");
     if( x != -1 ){
       int offset = macidx /2;
       if( macidx % 2 == 0 ){
@@ -141,7 +141,7 @@ int string2macaddress( uint8_t * mac, char * s){
         mac[offset] |= x;
         macidx++;
       }
-      printmac();
+      //printmac();
     }
   }
   return 0;

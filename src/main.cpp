@@ -93,11 +93,47 @@ void setup() {
   Serial.println("Booted, ready!");
 }
 
+enum _serialmode {
+  debug = 0, //doesn't do anything yet
+  ambepassthrough, //everything (except for a leave-mode command) passed through to AMBE3k
+};
+enum _serialmode serialmode = debug;
+uint8_t ambe3kreset[] = {0x61, 0x00, 0x01, 0x00, 0x33};
+int8_t buf[5];
+int bufi = 0;
+bool possible_mode_switch = false;
 void loop() {
   if( Serial.available() ){
-    //
+    int x = Serial.read();
+    buf[bufi++] =x;
+    if( bufi > 5 ){
+      possible_mode_switch = false;
+      bufi=0;
+      memset(buf, 0, 5);
+    }
+    if( x == 0x61 ){
+      possible_mode_switch = true;
+      memset(buf, 0, 5);
+      bufi=0;
+      buf[bufi++] =x;
+    } else {
+      if( strncmp( (const char *)buf, (const char *)ambe3kreset, 5) == 0 ){
+        //if we get a reset packet, toggle ambepassthrough (and pass the packet too!)
+        if( serialmode == ambepassthrough ){
+          Serial.println("Mode switch: debug");
+          serialmode = debug;
+        } else {
+          Serial.println("Mode switch: AMBE3k");
+          serialmode = ambepassthrough;
+        }
+        Serial2.write(ambe3kreset,5);
+        memset(buf, 0, 5);
+      }
+    }
   }
   if( Serial2.available() ){
-    //
+    if( serialmode == ambepassthrough ){
+      Serial.write(Serial2.read());
+    }
   }
 }
