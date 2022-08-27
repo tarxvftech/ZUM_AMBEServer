@@ -55,7 +55,7 @@ uint8_t DV3000_REQ_5_RESP[] = { 0x61, 0x00, 0x02, 0x00, 0x0A, 0x00 };
 
 uint8_t DV3000_REQ_RESET[]        = { DV3000_START_BYTE, 0x00U, 0x07U, DV3000_TYPE_CONTROL, DV3000_CONTROL_RESETSOFTCFG, 0x05U, 0x00U, 0x00U, 0x0FU, 0x00U, 0x00U };
 #define DV3000_REQ_RESET_LEN 11U
-// packet after hard reset same as soft reset?
+// packet after hard reset same as soft reset? (yes, 0x00 0x39 is the READY packet)
 uint8_t DV3000_RESP_RESET[]       = { 0x61, 0x00, 0x01, 0x00, 0x39 };
 #define DV3000_RESP_RESET_LEN 5U
 

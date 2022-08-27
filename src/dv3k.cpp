@@ -1,4 +1,8 @@
 #include <stdint.h>
+//typedef char uint8_t;
+//typedef signed char int8_t;
+//typedef unsigned short uint16_t;
+//typedef short int16_t;
 
 /*
    AMBE-3000R codec communications:
