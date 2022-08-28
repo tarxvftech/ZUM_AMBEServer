@@ -56,6 +56,9 @@ esptool.py --chip esp32 --port "/dev/ttyUSB0" --baud 460800 --before default_res
 0x10000 .pio/build/lolin32/firmware.bin \
 ```
 
+### Network Flashing
+You can compile the firmware with ArduinoOTA. Flash with `pio run -t upload --upload-port IP_ADDRESS_HERE`. (Untested in Docker). This is not working right now (suspect the flash partition layout is incompatible with OTA) and is disabled by default.
+
 
 
 ### Compile this firmware from Windows (GUI)
