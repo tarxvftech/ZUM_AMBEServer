@@ -67,7 +67,7 @@ class AMBE:
         return struct.pack(">BHB", cls.PKT_MAGIC, sz, pkttype)
 
     @classmethod
-    def make_command(cls, name, args=None):
+    def command(cls, name, args=None):
         return cls.make_header( cls.CONTROL, name, args) + struct.pack(">B", cls.TYPES[cls.CONTROL][name][0])
 
     @classmethod
@@ -88,35 +88,59 @@ class AMBE:
                     return [fn,fv, remaining[1:]]
                     
 
-        
-while 0:
-    try:
-        ser = serial.Serial('/dev/ttyUSB0', 460800, timeout=.002)
+class Timeout(BaseException):
+    pass
+class CommErr(BaseException):
+    pass
+class SerialAMBE:
+
+    def __init__(self):
+        a = AMBE()
+        x = a.command("PKT_RESET")
+        assert x == amberesetvector
+        self.ser = serial.Serial('/dev/ttyUSB0', 460800, timeout=.002)
+    def write(self, msg):
+        self.ser.write(msg)
+        self.ser.flush()
+    def command(self,name):
+        self.write(AMBE.command(name))
+    def until_ready_do(self, cb):
+        cb()
+        maxtries = 3
+        tries = 0
         while 1:
-            sys.stdout.buffer.write(ser.read())
-            sys.stdout.flush() #needed to print to screen!
-    except serial.serialutil.SerialException:
-        time.sleep(0.001)
-        continue
-# while 1:
-    # sys.stdout.buffer.write(ser.read())
-    # sys.stdout.flush() #needed to print to screen!
+            if tries > maxtries:
+                raise CommErr
+            try:
+                self.until_ready()
+                return
+            except Timeout:
+                cb()
+            tries += 1
 
-a = AMBE()
-x = a.make_command("PKT_RESET")
-assert x == amberesetvector
+    def until_ready(self):
+        rdy = AMBE.command("PKT_READY")
+        then = time.time()
+        while 1:
+            if time.time() > then + .5:
+                raise(Timeout)
+            ret = self.ser.read(1024)
+            idx = ret.find(b"a")
+            if idx >= 0:
+                x = AMBE.parse( ret[idx:] )
+                print(x[0], x[2]) #should be PKT_READY
+                break
 
-ser = serial.Serial('/dev/ttyUSB0', 460800, timeout=.002)
-print(ser.read(4096))
-ser.write(amberesetvector)
-ser.flush()
-time.sleep(.002)
-while 1:
-    ret = ser.read(1024)
-    idx = ret.find(b"a")
-    print(idx, ret)
-    if idx >= 0:
-        x = AMBE.parse( ret[idx:] )
-        print(x[0], x[2]) #should be PKT_READY
-        import pdb; pdb.set_trace()
+    def start(self):
+        print(self.ser.read(4096))
+        #send the PKT_RESET command and wait for a response until we get in the right mode for serial passthrough to the AMBE3000 chip
+        self.until_ready_do(lambda:self.command("PKT_RESET"))
+        return
 
+# sys.stdout.buffer.write(ser.read())
+# sys.stdout.flush() #needed to print to screen!
+
+
+sa = SerialAMBE()
+sa.start()
+import pdb; pdb.set_trace()

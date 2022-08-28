@@ -152,7 +152,7 @@ void loop() {
       bufi=0;
       buf[bufi++] =x;
     } else {
-      if( strncmp( (const char *)buf, (const char *)ambe3kreset, 5) == 0 ){
+      if( memcmp( (const char *)buf, (const char *)ambe3kreset, 5) == 0 ){
         //if we get a reset packet, toggle ambepassthrough (and pass the packet too!)
         if( serialmode == ambepassthrough ){
           Serial.println("Mode switch: debug");
