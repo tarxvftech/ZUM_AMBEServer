@@ -63,7 +63,7 @@ void dv3k_hardreset(){
 
 
 void parse_all_config_files(); //from configfiles.cpp
-                               
+bool ethernet_running = false;                             
 void setup() {
   Serial.begin(460800); // "Serial" connected to FTDI chip TXD0/RXD0 pins
   Serial1.begin(115200); // "Serial1" connected to Debug/Nextion port
@@ -94,7 +94,6 @@ void setup() {
   sd.end();
   digitalWrite(ETHERNET_SELECT, LOW); // Enable Ethernet card
   Ethernet.init(ETHERNET_SELECT); // Init the W5500
-  //Ethernet.begin(mac); // DHCP, uses mac from eth.txt if present and working
   Serial.println("Booted, ready!");
 
 #ifdef OTA
@@ -140,6 +139,9 @@ bool possible_mode_switch = false;
 void loop() {
   if( Serial.available() ){
     int x = Serial.read();
+    if( serialmode == ambepassthrough ){
+      Serial2.write(x);
+    }
     buf[bufi++] =x;
     if( bufi > 5 ){
       possible_mode_switch = false;
@@ -157,11 +159,15 @@ void loop() {
         if( serialmode == ambepassthrough ){
           Serial.println("Mode switch: debug");
           serialmode = debug;
+          //already wrote the reset (which isn't parity checked by ambe3k ) since we're in passthrough mode
+          //might have two trash bytes left if passthrough client is sending parity, but i think that's fine
         } else {
           Serial.println("Mode switch: AMBE3k");
           serialmode = ambepassthrough;
+          Serial2.write(ambe3kreset,5);
         }
-        Serial2.write(ambe3kreset,5);
+        possible_mode_switch = false;
+        bufi=0;
         memset(buf, 0, 5);
       }
     }
@@ -174,5 +180,17 @@ void loop() {
 #ifdef OTA
   ArduinoOTA.handle();
 #endif
-  Ethernet.maintain();
+  if( ethernet_running ){
+    if (Ethernet.linkStatus() == LinkOFF) {
+      //once begun, leave it running regardless!
+    } else {
+      Ethernet.maintain();
+    }
+  } else {
+    //delay startup, since a LinkOFF ethernet can delay boot significantly
+    if (Ethernet.linkStatus() == LinkON) {
+      ethernet_running = true;
+      Ethernet.begin(mac); // DHCP, uses mac from eth.txt if present and working
+    }
+  }
 }
